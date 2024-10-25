@@ -10,9 +10,3 @@ const obj_info_url = document.getElementById("info_url");
 obj_empezar.addEventListener("click", empezarPartida);
 obj_borrar.addEventListener("click", borrarPartida);
 
-
-function crearButons(){
-    const buto = document.createElement("button");
-    boto.id="b1";
-    boto.textContent = "A";
-}
