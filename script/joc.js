@@ -1,5 +1,37 @@
+//OBJECTES
+const obj_instruccions= document.getElementById("instruccions");
+
+const obj_nombre_jugador= document.getElementById("nomJugador");
+const nomStorage = sessionStorage.getItem('nomJugador');
+
+//EVENTS
+obj_instruccions.addEventListener("click", abrirInstrucciones);
+
+
+//VARIABLES I CONSTANTS
+let pagina;
+
+
+
 const lletres = ['A','B','C','D','E','F','G','H','I','J',]
 const lletresContenidor = document.getElementById('joc');
+
+
+
+//FUNCTIONS
+
+
+function mostrarNombre(){
+    obj_nombre_jugador.textContent = nomStorage;
+}
+
+mostrarNombre();
+
+function abrirInstrucciones(){
+   // pagina = window.open('instruccions.html');
+    pagina = window.open('instruccions.html','instruccions','width=400,height=400');
+}
+
 
 
 function habilitarButtons(){
@@ -33,3 +65,6 @@ function crearButtons(){
 
 crearButtons();
 habilitarButtons();
+
+
+

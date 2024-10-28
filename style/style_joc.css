@@ -55,4 +55,11 @@ main{
     width: 116px;
     height: 116px;
     border-radius: 10%;
+    /*color: rgb(52, 152, 219);*/
+    background-color: rgb(52, 152, 219);
+}
+
+#joc button:hover{
+    color: white;
+    background-color: rgb(115, 180, 223);
 }
