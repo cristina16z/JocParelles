@@ -10,9 +10,14 @@ obj_instruccions.addEventListener("click", abrirInstrucciones);
 
 //VARIABLES I CONSTANTS
 let pagina;
+
 let lletraJugada;
 let firstbutton;
 let secondbutton;
+let contadorParejas = 0;
+const MAX_PAREJAS = 10;
+
+let punts = 0;
 
 
 const lletres = ['A','B','C','D','E','F','G','H','I','J',]
@@ -85,17 +90,24 @@ function  jugarLletra(lletra) {
 
     if(!firstbutton){
         firstbutton = lletra;
-        deshabilitarLletra(lletra);
+        deshabilitarLletra(firstbutton);
 
     }else if (!secondbutton){
         secondbutton = lletra;
-        deshabilitarLletra(lletra);
+        deshabilitarLletra(secondbutton);
 
 
         if (firstbutton.textContent === secondbutton.textContent){
             console.log('Pareja encontrada');
+            contadorParejas++;
             deshabilitarLletra(firstbutton);
             deshabilitarLletra(secondbutton);
+            console.log(contadorParejas);
+
+            //Si completamos todas las parejas, ganamos
+            if (contadorParejas == MAX_PAREJAS){
+                win();
+            }
 
         }else{
             deshabilitarLletra(secondbutton);
@@ -116,5 +128,7 @@ function  jugarLletra(lletra) {
     }   
 }
 
-
+function win(){
+    location.assign('partidaFinalitzada.html')
+}
 
