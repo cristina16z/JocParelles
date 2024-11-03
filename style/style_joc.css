@@ -55,11 +55,18 @@ main{
     width: 116px;
     height: 116px;
     border-radius: 10%;
-    /*color: rgb(52, 152, 219);*/
+    color: rgb(52, 152, 219);
     background-color: rgb(52, 152, 219);
+    border-color:  rgb(52, 152, 219);
 }
 
 #joc button:hover{
-    color: white;
+    color: rgb(115, 180, 223);
     background-color: rgb(115, 180, 223);
+}
+
+#joc button:disabled {
+    opacity: 0.8;
+    color: white;
+    pointer-events: none; /*evita que al estar deshabilitado, responda a eventos del mouse*/
 }
