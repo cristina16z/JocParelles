@@ -26,7 +26,7 @@ let punts = 0;
 let maxPunts = 0;
 let maxJugador;
 
-
+const userAgent = navigator.userAgent;
 
 const lletres = ['A','B','C','D','E','F','G','H','I','J',]
 const lletresContenidor = document.getElementById('joc');
@@ -35,6 +35,16 @@ const lletresContenidor = document.getElementById('joc');
 
 //FUNCTIONS
 
+function colorNavegador(){
+
+    if (userAgent.includes("Chrome")) {
+        document.body.style.backgroundColor = 'rgb(164, 237, 165)';
+    } else if (userAgent.includes("Mozilla")) {
+        document.body.style.backgroundColor = "orange"; 
+    }
+}
+
+colorNavegador();
 
 function mostrarNombre(){
    // obj_nombre_jugador.textContent = nomStorage;
