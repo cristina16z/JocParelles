@@ -31,16 +31,19 @@ const userAgent = navigator.userAgent;
 function empezarPartida(){
     if(obj_nom.value){
         pagina = window.open('joc.html');
-        //redireccio: location.assign('joc.html')
-        //sessionStorage.setItem('nomJugador', 'nombreIntroducido');
         document.cookie ="username=" + obj_nom.value;     //Guardamos el nombre en una cookie
+        //mostrarNombre();
     }else{
         alert('Has dinformar el nom del jugador');
     }
 }
 
+
 function borrarPartida(){
+    localStorage.removeItem("localpunts");
+    localStorage.removeItem("localjugador");
     pagina.close('joc.html');
+    obj_nom.value=""
 }
 
 
