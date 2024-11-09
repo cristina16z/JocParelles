@@ -32,7 +32,8 @@ function empezarPartida(){
     if(obj_nom.value){
         pagina = window.open('joc.html');
         //redireccio: location.assign('joc.html')
-        sessionStorage.setItem('nomJugador', 'nombreIntroducido');
+        //sessionStorage.setItem('nomJugador', 'nombreIntroducido');
+        document.cookie ="username=" + obj_nom.value;     //Guardamos el nombre en una cookie
     }else{
         alert('Has dinformar el nom del jugador');
     }

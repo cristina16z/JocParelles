@@ -29,7 +29,13 @@ const lletresContenidor = document.getElementById('joc');
 
 
 function mostrarNombre(){
-    obj_nombre_jugador.textContent = nomStorage;
+   // obj_nombre_jugador.textContent = nomStorage;
+
+   //Usamos .split para dividir la cadena en username y el nombre, 
+   //y usamos el [1] para acceder a la segunda parte que es el valor nombre
+   let cookies = document.cookie.split('=')[1];
+   obj_nombre_jugador.textContent = cookies;
+  
 }
 
 mostrarNombre();
