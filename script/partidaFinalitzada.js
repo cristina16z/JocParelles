@@ -1,7 +1,12 @@
 //CONSTANTS
 const userAgent = navigator.userAgent;
 
+
+
 //FUNCIONS
+
+/*********************************************************  El color de fondo será diferente dependiendo del Navegador  *************************************/
+
 function colorNavegador(){
 
     if (userAgent.includes("Chrome")) {
@@ -10,5 +15,9 @@ function colorNavegador(){
         document.body.style.backgroundColor = "orange"; 
     }
 }
+
+
+
+/************************************************************* Funcions que les activem automàticament ********************************************************/
 
 colorNavegador();

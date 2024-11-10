@@ -1,7 +1,6 @@
 //OBJECTES
 const obj_instruccions= document.getElementById("instruccions");
 const obj_nombre_jugador= document.getElementById("nomJugador");
-const nomStorage = sessionStorage.getItem("nomJugador");
 const puntos = document.getElementById("punts");
 
 const millorJugador = document.getElementById("millorJugador");
@@ -13,10 +12,9 @@ obj_instruccions.addEventListener("click", abrirInstrucciones);
 
 //VARIABLES I CONSTANTS
 let pagina;
-
 let cookies;
 
-let lletraJugada;
+//JOC
 let firstbutton;
 let secondbutton;
 let contadorParejas = 0;
@@ -26,64 +24,41 @@ let punts = 0;
 let maxPunts = 0;
 let maxJugador;
 
-const userAgent = navigator.userAgent;
-
 const lletres = ['A','B','C','D','E','F','G','H','I','J',]
 const lletresContenidor = document.getElementById('joc');
 
 
+//Navegador
+const userAgent = navigator.userAgent;
+
+
+//Canal BradcastChannel
 const bcc = new BroadcastChannel('canal');
 let estadoGame = 'En joc';
 
-//FUNCTIONS
 
-function colorNavegador(){
 
-    if (userAgent.includes("Chrome")) {
-        document.body.style.backgroundColor = 'rgb(164, 237, 165)';
-    } else if (userAgent.includes("Mozilla")) {
-        document.body.style.backgroundColor = "orange"; 
-    }
-}
-
-colorNavegador();
+/****************************************************************** FUNCIONALITATS ********************************************************/
 
 function mostrarNombre(){
-   // obj_nombre_jugador.textContent = nomStorage;
-
-   //Usamos .split para dividir la cadena en username y el nombre, 
-   //y usamos el [1] para acceder a la segunda parte que es el valor nombre
-    cookies = document.cookie.split('=')[1];
-   obj_nombre_jugador.textContent = cookies;
-  
+    cookies = document.cookie.split('=')[1];            //Usamos .split para dividir la cadena en username y el nombre, 
+   obj_nombre_jugador.textContent = cookies;            //y usamos el [1] para acceder a la segunda parte que es el valor nombre
 }
 
-mostrarNombre();
 
-function abrirInstrucciones(){
-   // pagina = window.open('instruccions.html');
+
+function abrirInstrucciones(){ //Funcionalidad del botón para abrir la ventana de instrucciones
     pagina = window.open('instruccions.html','instruccions','width=400,height=400');
 }
 
 
-//CREACIÓ DELS BUTTONS DEL JOC
 
-function habilitarButtons(){
-    for(let i = 1; i<= lletres.length * 2; i++){
-       let literal ="boto_" + i;
-       const botoA = document.getElementById(literal);
-       botoA.disabled = false;
-    }
-}
-
-
+/*************************************************************************** CREACIÓ DELS BUTTONS DEL JOC **************************************/
 
 function crearButtons(){
 
-    //Guardamos en una variable el array de letras 2 veces,
-    //de forma que lo mezclamos para que sea de forma aleatoria
-    const lletresDuplicades = [...lletres, ...lletres];
-    lletresDuplicades.sort(() => Math.random() - 0.5);
+    const lletresDuplicades = [...lletres, ...lletres];             //Guardamos en una variable el array de letras 2 veces,
+    lletresDuplicades.sort(() => Math.random() - 0.5);              //de forma que lo mezclamos para que sea de forma aleatoria
 
     //Creamos los botones
     for(let i = 0; i < lletresDuplicades.length; i++){
@@ -91,73 +66,82 @@ function crearButtons(){
         const crearBoton = document.createElement("button");
         crearBoton.id="boto_" + (i + 1);
         crearBoton.textContent = letra;
+        crearBoton.disabled = false;                                //activamos todos los botones
         crearBoton.addEventListener("click",() => jugarLletra(crearBoton));
         lletresContenidor.appendChild(crearBoton);
     }
 }
 
 
-crearButtons();
-habilitarButtons();
-
-// LÓGICA DEL JOC 
-
-function deshabilitarLletra(lletra){
-    lletra.disabled = true;
-}
-
-function habilitarLletra(lletra){
-    lletra.disabled = false;
-
-}
-
+/******************************************************************************* LÓGICA DEL JOC ******************************************************/
 
 function  jugarLletra(lletra) {
 
-    if(!firstbutton){
-        firstbutton = lletra;
-        deshabilitarLletra(firstbutton);
+    if(!firstbutton){                                                   //sino hay asignación del primer botón lo asignamos y deshabilitamos
+        firstbutton = lletra;                                        
+        deshabilitarLletra(firstbutton);                               
 
-    }else if (!secondbutton){
+    }else if (!secondbutton){                                           //sino hay asignación del segundo bóton, lo asignamos y deshabilitamos
         secondbutton = lletra;
         deshabilitarLletra(secondbutton);
 
-
-        if (firstbutton.textContent === secondbutton.textContent){
+        if (firstbutton.textContent === secondbutton.textContent){      //si el contenido de ambos botones coinciden, es decir encontramos pareja
             console.log('Pareja encontrada');
-            contadorParejas++;
-            sumarPunts();
-            deshabilitarLletra(firstbutton);
+            contadorParejas++;                                          //aumentamos la cantidad de parejas encontradas
+            sumarPunts();                                               //sumamos los puntos
+            deshabilitarLletra(firstbutton);                            // y deshabilitamos ambos botones
             deshabilitarLletra(secondbutton);
-            console.log(contadorParejas);
-
-            //Si completamos todas las parejas, ganamos
-            if (contadorParejas == MAX_PAREJAS){
+            
+            if (contadorParejas == MAX_PAREJAS){                        //Si completamos todas las parejas, ganamos i guardamos puntuación
                 guardarPuntuacion();
                 win();
                 
             }
 
-        }else{
+        }else{                                                          //sino son pareja, deshabilitamos botones y restamos puntos
             deshabilitarLletra(secondbutton);
             console.log('No son pareja');
             restarPunts();
-            //para que se deshabilite, y luego se vuelva a habilitar
-            //de forma que se vea la letra en ése tiempo de retraso
-             setTimeout(() => { 
-                habilitarLletra(firstbutton);
+            
+            setTimeout(() => {                                          //para que se deshabilite, y luego se vuelva a habilitar
+                habilitarLletra(firstbutton);                           //de forma que se vea la letra en ése tiempo de retraso
                 habilitarLletra(secondbutton);
-            }, 500);
+            }, 200);
         }
-
-        //reset de las variables con retraso
-        setTimeout(() => {
-            firstbutton = null;
+        
+        setTimeout(() => {                                               //reset de las variables con retraso 
+            firstbutton = null;                                          // de forma que se tienen que volver a assignar qué botón presionamos primero y segundo
             secondbutton = null;
-        }, 500);
+        }, 200);
     }   
 }
 
+
+
+//PUNTUACIÓN 
+function sumarPunts(){
+    punts +=10;
+    puntos.textContent = punts;
+    enviarDatos();                                                      //Actualizamos los puntos en tiempo real
+}
+
+
+function restarPunts(){
+    punts -=3;
+
+    //Evitar la puntuación negativa
+    if (punts <= 0){                                                    //en caso de ser negativa, actualizamos punts = 0
+        punts = 0; 
+        puntos.textContent = 0;
+    }else{
+        puntos.textContent = punts;
+    }
+
+    enviarDatos();                                                      //Actualizamos los puntos en tiempo real
+}
+
+
+//Cuando ganas
 function win(){
     estadoGame ='Partida Finalitzada';
     enviarDatos();
@@ -165,31 +149,25 @@ function win(){
 }
 
 
-//PUNTUACIÓN 
 
-function sumarPunts(){
-    punts +=10;
-    puntos.textContent = punts;
-    enviarDatos(); //Actualizamos los puntos en tiempo real
+//Habilitación y deshabilitación de los botones según vas jugando
+
+function deshabilitarLletra(lletra){
+    lletra.disabled = true;
 }
 
-function restarPunts(){
-    punts -=3;
 
-    //Evitar la puntuación negativa
-    if (punts <= 0){ //en caso de ser negativa, actualizamos punts = 0
-        punts = 0; 
-        puntos.textContent = 0;
-    }else{
-        puntos.textContent = punts;
-    }
-
-    enviarDatos(); //Actualizamos los puntos en tiempo real
+function habilitarLletra(lletra){
+    lletra.disabled = false;
 }
+
+
+
+/******************************** LocalStorage para guardar los datos (nombre y puntos) de la partida con mayor puntuación ******************************/
 
 function guardarPuntuacion(){
     maxPunts = Number(localStorage.getItem("localpunts"));
-    if(punts > maxPunts){//Actualizamos los datos del localStorage
+    if(punts > maxPunts){                                           //Actualizamos los datos del localStorage
         localStorage.setItem("localpunts", punts);
         localStorage.setItem("localjugador", cookies);
         mostrarMaxEstadistiques();
@@ -205,8 +183,9 @@ function mostrarMaxEstadistiques(){
     millorPunts.textContent = maxPunts;
 }
 
-mostrarMaxEstadistiques();
 
+
+/********************************************************* Envió de las estadísitcas, datos actuales por el canal  ******************************************/
 
 function enviarDatos(){
     bcc.postMessage({
@@ -216,4 +195,26 @@ function enviarDatos(){
     });
 }
 
+
+
+/*********************************************************  El color de fondo será diferente dependiendo del Navegador  *************************************/
+
+function colorNavegador(){
+
+    if (userAgent.includes("Chrome")) {
+        document.body.style.backgroundColor = 'rgb(164, 237, 165)';
+    } else if (userAgent.includes("Mozilla")) {
+        document.body.style.backgroundColor = "orange"; 
+    }
+}
+
+
+
+/************************************************************* Funcions que les activem automàticament ********************************************************/
+
+mostrarMaxEstadistiques();
+mostrarNombre();
+crearButtons();
+habilitarButtons();
+colorNavegador();
 enviarDatos();
