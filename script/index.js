@@ -16,8 +16,8 @@ obj_borrar.addEventListener("click", borrarPartida);
 
 //VARIABLES I CONSTANTS
 let pagina;
-
-
+const bcc = new BroadcastChannel('canal');
+let estadoGame = "No hi ha cap partida en joc";
 
 
 
@@ -32,7 +32,7 @@ function empezarPartida(){
     if(obj_nom.value){
         pagina = window.open('joc.html');
         document.cookie ="username=" + obj_nom.value;     //Guardamos el nombre en una cookie
-        //mostrarNombre();
+       
     }else{
         alert('Has dinformar el nom del jugador');
     }
@@ -43,7 +43,16 @@ function borrarPartida(){
     localStorage.removeItem("localpunts");
     localStorage.removeItem("localjugador");
     pagina.close('joc.html');
-    obj_nom.value=""
+    obj_nom.value="";
+
+    //actualizamos el estado por el bcc
+    estadoGame = "No hi ha cap partida en joc";
+    
+    bcc.postMessage({
+        jugador: null,
+        puntos: 0,
+        estado: estadoGame
+    });
 }
 
 
@@ -71,3 +80,31 @@ function colorNavegador(){
 colorNavegador();
 infoNavegador();
 infoURL();
+
+/*
+function estadoPartida(){
+    if (inGame){
+        estadoGame = "No hi ha cap partida en joc";
+    }else{
+        estadoGame = "En Partida";
+    }
+}*/
+
+
+function canalInfo() {
+    bcc.onmessage = (event) => {
+        if (event.data) {
+            const jugador = event.data.jugador;
+            const puntos = event.data.puntos;
+            const estado = event.data.estado;
+        
+            if (estado === "No hi ha cap partida en joc") {
+                obj_info_puntuacio.textContent = estado;
+            }else {
+                obj_info_puntuacio.textContent = `NOM: ${jugador}, PUNTS: ${puntos}, ESTAT PARTIDA: ${estado}`;
+            }
+        }
+    };
+}
+
+canalInfo();

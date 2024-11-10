@@ -32,6 +32,8 @@ const lletres = ['A','B','C','D','E','F','G','H','I','J',]
 const lletresContenidor = document.getElementById('joc');
 
 
+const bcc = new BroadcastChannel('canal');
+let estadoGame = 'En joc';
 
 //FUNCTIONS
 
@@ -157,6 +159,8 @@ function  jugarLletra(lletra) {
 }
 
 function win(){
+    estadoGame ='Partida Finalitzada';
+    enviarDatos();
     location.assign('partidaFinalitzada.html');
 }
 
@@ -166,6 +170,7 @@ function win(){
 function sumarPunts(){
     punts +=10;
     puntos.textContent = punts;
+    enviarDatos(); //Actualizamos los puntos en tiempo real
 }
 
 function restarPunts(){
@@ -178,6 +183,8 @@ function restarPunts(){
     }else{
         puntos.textContent = punts;
     }
+
+    enviarDatos(); //Actualizamos los puntos en tiempo real
 }
 
 function guardarPuntuacion(){
@@ -199,3 +206,14 @@ function mostrarMaxEstadistiques(){
 }
 
 mostrarMaxEstadistiques();
+
+
+function enviarDatos(){
+    bcc.postMessage({
+        jugador: cookies,
+        puntos: punts,
+        estado: estadoGame
+    });
+}
+
+enviarDatos();
