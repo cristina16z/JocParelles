@@ -106,13 +106,13 @@ function  jugarLletra(lletra) {
             setTimeout(() => {                                          //para que se deshabilite, y luego se vuelva a habilitar
                 habilitarLletra(firstbutton);                           //de forma que se vea la letra en ése tiempo de retraso
                 habilitarLletra(secondbutton);
-            }, 200);
+            }, 400);
         }
         
         setTimeout(() => {                                               //reset de las variables con retraso 
             firstbutton = null;                                          // de forma que se tienen que volver a assignar qué botón presionamos primero y segundo
             secondbutton = null;
-        }, 200);
+        }, 400);
     }   
 }
 
