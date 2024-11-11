@@ -15,28 +15,33 @@ obj_borrar.addEventListener("click", borrarPartida);
 
 
 //VARIABLES I CONSTANTS
+let puntos = 0;
+let estado = 'En joc'
 let pagina;
 const bcc = new BroadcastChannel('canal');
-let estadoGame = "No hi ha cap partida en joc";
 const userAgent = navigator.userAgent;
 
 
 /****************************************************************** FUNCIONALITATS ********************************************************/
 
 function empezarPartida(){
+    
+    if (localStorage.getItem("partidaActiva") === "true"){              //Verificamos si ya hay una ventana de juego activa previamente
 
-    if (localStorage.getItem("partidaActiva") === "true"){          //Verificamos si ya hay una ventana de juego activa previamente
-        pagina = window.open('joc.html');                           //si la hay, abrimos y cerramos el nuevo juego, y mostramos alerta
+        pagina = window.open('joc.html');                               //si la hay, abrimos y cerramos el nuevo juego, y mostramos alerta
         alert("Hi ha una partida començada"); 
-        pagina.close();                                             
-    }
+        pagina.close();
 
-    if(obj_nom.value){
-        pagina = window.open('joc.html');
-        document.cookie ="username=" + obj_nom.value;               //Guardamos el nombre en una cookie
-        localStorage.setItem("partidaActiva", "true");              //Decimos que ya hay una partidaActiva
-    }else{
-        alert(`Has d'introduir el nom del jugador`);
+    }else{                                                              //Si no hay una ventana de juego activa, la abrimos
+        
+        if(obj_nom.value){
+            obj_info_puntuacio.textContent = `NOM: ${obj_nom.value}, PUNTS: ${puntos}, ESTAT PARTIDA: ${estado}`;
+            pagina = window.open('joc.html');
+            document.cookie ="username=" + obj_nom.value;               //Guardamos el nombre en una cookie
+            localStorage.setItem("partidaActiva", true);                //Decimos que ya hay una partidaActiva
+        }else{
+            alert(`Has d'introduir el nom del jugador`);
+        }
     }
 }
 
@@ -46,10 +51,10 @@ function borrarPartida(){
     localStorage.removeItem("localpunts");
     localStorage.removeItem("localjugador");
     obj_nom.value="";
-    localStorage.setItem("partidaActiva", "false");                     //decimos que ya no hay partida activa
+    localStorage.setItem("partidaActiva", false);                     //decimos que ya no hay partida activa
 
     if (pagina && !pagina.closed) {
-    pagina.close('joc.html');                                           //cerramos la ventana de juego activa si existe y no está cerrada
+        pagina.close();                                           //cerramos la ventana de juego activa si existe y no está cerrada
     }      
                           
     obj_info_puntuacio.textContent =  "No hi ha cap partida en joc";    //actualizamos el estado
@@ -79,7 +84,7 @@ function canalInfo() {
             const estado = event.data.estado;
 
             if (estado === "Partida Finalitzada") {                 //Si finalizamos una partida, partidaActiva a false para que se pueda empezar otra partida 
-                localStorage.setItem("partidaActiva", "false");     // y no salte el alert de que ya hay una partida empezada
+                localStorage.setItem("partidaActiva", false);     // y no salte el alert de que ya hay una partida empezada
             }
         
             if (estado === "No hi ha cap partida en joc") {
